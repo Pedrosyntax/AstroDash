@@ -19,7 +19,7 @@ rocks_image_path = r"C:\Users\appuambu\assests1\rocks.webp"
 
 # Function to load and resize images
 def load_image(path, width, height):
-    """Loads and resizes an image."""
+    """Loads and resizes an image. #HELOOOO
     try:
         image = pygame.image.load(path)  # Load the image
         image = pygame.transform.scale(image, (width, height))  # Resize the image
