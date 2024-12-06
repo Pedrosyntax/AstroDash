@@ -112,7 +112,7 @@ while True:
         segments.append(new_segment)
 
 
-        delay -= 0.001
+        delay -= 0.011
 
      
         score += 10
