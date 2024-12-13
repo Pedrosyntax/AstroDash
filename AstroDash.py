@@ -2,6 +2,8 @@ import pygame
 import sys
 import random
 import time
+import requests
+from io import BytesIO
 
 pygame.init()
 
@@ -17,24 +19,28 @@ except FileNotFoundError:
     pygame.quit()
     sys.exit()
 
-def load_image(path, width, height):
+def load_image(url, width, height):
     try:
-        image = pygame.image.load(path)
+        response = requests.get(url)
+        response.raise_for_status()
+        image = pygame.image.load(BytesIO(response.content))
         image = pygame.transform.scale(image, (width, height)) 
         return image
+    except requests.exceptions.RequestException as e:
+        print(f"Error downloading image from {url}: {e}")
     except pygame.error as e:
-        print(f"Error loading image at {path}: {e}")
-        return None
+        print(f"error loading image: {e}")
+    return None
     
-ship_image = load_image(r"C:\Users\Pedro\Desktop\images\pship.png", 120, 120)
-ship_powered_image = load_image(r"C:\Users\Pedro\Desktop\images\pship2.png", 120, 120)
-heart_image = load_image(r"C:\Users\Pedro\Desktop\images\pship2.png", 60, 60)
-heart_gray = load_image(r"C:\Users\Pedro\Desktop\images\lifegrey.png", 60, 60)
-background_image_loop = load_image(r"C:\Users\Pedro\Desktop\images\space2.png", 1200, 1000)
-fuel_image = load_image(r"C:\Users\Pedro\Desktop\images\fuel.png", 70, 70)
-rocks_image = load_image(r"C:\Users\Pedro\Desktop\images\rocks.png", 70, 70)
-start_screen_image = load_image(r"C:\Users\Pedro\Desktop\images\start.jpg", width, 1000)
-lost_screen_image = load_image(r"C:\Users\Pedro\Desktop\images\lost.png", width, 1000)
+ship_image = load_image("https://github.com/Pedrosyntax/AstroDash/blob/main/pship.png?raw=true", 120, 120)
+ship_powered_image = load_image("https://github.com/Pedrosyntax/AstroDash/blob/main/pship2.png?raw=true", 120, 120)
+heart_image = load_image("https://github.com/Pedrosyntax/AstroDash/blob/main/heart.png?raw=true", 60, 60)
+heart_gray = load_image("https://github.com/Pedrosyntax/AstroDash/blob/main/lifegrey.png?raw=true", 60, 60)
+background_image_loop = load_image("https://github.com/Pedrosyntax/AstroDash/blob/main/space2.png?raw=true", 1200, 1000)
+fuel_image = load_image("https://github.com/Pedrosyntax/AstroDash/blob/main/fuel.png?raw=true", 70, 70)
+rocks_image = load_image("https://github.com/Pedrosyntax/AstroDash/blob/main/rocks.png?raw=true", 70, 70)
+start_screen_image = load_image("https://github.com/Pedrosyntax/AstroDash/blob/main/start.jpg?raw=true", width, 1000)
+lost_screen_image = load_image("https://github.com/Pedrosyntax/AstroDash/blob/main/lost.png?raw=true", width, 1000)
 
 if not all ([ship_image, ship_powered_image, heart_image, heart_gray, background_image_loop, fuel_image, rocks_image, start_screen_image, lost_screen_image]):
     print("Error: One or more images failed to load.")
@@ -190,6 +196,7 @@ while True:
             if pygame.Rect(ship_x, ship_y, 50, 80).colliderect(rock):
                 lives -= 1
                 rocks.remove(rock)
+        
         for f in fuel[:]:
             f.y += game_speed
             if f.y > height:
