@@ -27,16 +27,16 @@ def load_image(path, width, height):
         return None
     
 ship_image = load_image(r"C:\Users\Pedro\Desktop\images\pship.png", 120, 120)
-ship_powered = load_image(r"C:\Users\Pedro\Desktop\images\pship2.png", 120, 120)
-heart_image = load_image(r"C:\Users\Pedro\Desktop\images\pship2.png", 120, 120)
+ship_powered_image = load_image(r"C:\Users\Pedro\Desktop\images\pship2.png", 120, 120)
+heart_image = load_image(r"C:\Users\Pedro\Desktop\images\pship2.png", 60, 60)
 heart_gray = load_image(r"C:\Users\Pedro\Desktop\images\lifegrey.png", 60, 60)
-background_image = load_image(r"C:\Users\Pedro\Desktop\images\space2.png", 1200, 1000)
+background_image_loop = load_image(r"C:\Users\Pedro\Desktop\images\space2.png", 1200, 1000)
 fuel_image = load_image(r"C:\Users\Pedro\Desktop\images\fuel.png", 70, 70)
 rocks_image = load_image(r"C:\Users\Pedro\Desktop\images\rocks.png", 70, 70)
 start_screen_image = load_image(r"C:\Users\Pedro\Desktop\images\start.jpg", width, 1000)
-lost_screen = load_image(r"C:\Users\Pedro\Desktop\images\lost.png", width, 1000)
+lost_screen_image = load_image(r"C:\Users\Pedro\Desktop\images\lost.png", width, 1000)
 
-if not all ([ship_image, ship_powered, heart_image, heart_gray, background_image, fuel_image, rocks_image, start_screen_image, lost_screen]):
+if not all ([ship_image, ship_powered_image, heart_image, heart_gray, background_image_loop, fuel_image, rocks_image, start_screen_image, lost_screen_image]):
     print("Error: One or more images failed to load.")
     pygame.quit()
     sys.exit()
@@ -104,7 +104,7 @@ def start_screen():
 # Game over screen
 def game_over_screen():
     while True:
-        screen.blit(lost_screen, (0, 0))
+        screen.blit(lost_screen_image, (0, 0))
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -113,9 +113,9 @@ def game_over_screen():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:
                     return
-            elif event.key == pygame.K_q:
-                pygame.quit()
-                sys.exit()
+                elif event.key == pygame.K_q:
+                    pygame.quit()
+                    sys.exit()
 
 # Main game loop
 while True:
@@ -134,8 +134,8 @@ while True:
         bg_scroll_y += game_speed
         if bg_scroll_y >= height:
             bg_scroll_y = 0
-        screen.blit(background_image, (0, bg_scroll_y - height))
-        screen.blit(background_image, (0, bg_scroll_y))
+        screen.blit(background_image_loop, (0, bg_scroll_y - height))
+        screen.blit(background_image_loop, (0, bg_scroll_y))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -201,7 +201,7 @@ while True:
         if fuel_percentage <= 0:
             fuel_percentage = 0
 
-        current_ship_image = ship_powered if is_boost_active else ship_image
+        current_ship_image = ship_powered_image if is_boost_active else ship_image
         screen.blit(current_ship_image, (ship_x, ship_y))
         for rock in rocks:
             screen.blit(rocks_image, rock)
@@ -223,6 +223,6 @@ while True:
         if lives <= 0:
             game_over_screen()
 
-    pygame.display.update()
-    pygame.time.Clock().tick(60)
+        pygame.display.update()
+        pygame.time.Clock().tick(60)
     
